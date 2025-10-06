@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Age Inquiry Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Light mode specific classes (for consistent theme toggling) */
+        .light .bg-slate-950 { background-color: #f7f8fa; }
+        .light .text-slate-100 { color: #1e293b; }
+        .light .bg-slate-900\/60 { background-color: rgba(255, 255, 255, 0.9); }
+        .light .text-slate-300 { color: #475569; }
+        .light .text-slate-400 { color: #64748b; }
+    </style>
+</head>
+<body class="min-h-screen bg-slate-950 text-slate-100">
+
+    <header class="bg-blue-600 text-white">
+        <div class="mx-auto max-w-6xl px-4 py-4 flex items-center justify-between bg-sky-500">
+            <h1 class="text-xl md:text-2xl font-bold tracking-tight">🧮 Age Inquiry <span class="opacity-90">Pro</span>: Contact Us</h1>
+            <a href="index.html" class="rounded-xl bg-white text-slate-900 hover:bg-slate-100 px-3 py-2 text-sm font-semibold cursor-pointer">Go Back</a>
+        </div>
+    </header>
+
+    <main class="mx-auto max-w-4xl px-4 py-8">
+    <section class="bg-slate-900/60 backdrop-blur rounded-2xl ring-1 ring-white/10 p-5 md:p-7 light:bg-white/90">
+        <h2 class="text-3xl font-bold mb-4">Privacy Policy for Age Inquiry Pro</h2>
+        <p class="mb-6 text-slate-300 light:text-slate-700">At Age Inquiry Pro, the privacy of our visitors is of utmost importance to us. This policy outlines how we handle information on our website.</p>
+        
+        <h3 class="text-2xl font-semibold mt-6 mb-3">1. Data Collection & Processing</h3>
+        <p class="mb-4 text-slate-300 light:text-slate-700"><strong>We Do Not Collect Personal Data:</strong> This Age Calculator website operates **entirely client-side**. We do not gather any personal identifiable information (PII) like names, email addresses, or IP addresses from our visitors for our own use.</p>
+        <p class="mb-4 text-slate-300 light:text-slate-700">The date of birth entered for calculation is processed solely within your browser and is **not stored or transmitted to our servers**.</p>
+
+        <h3 class="text-2xl font-semibold mt-6 mb-3">2. Third-Party Services (Google AdSense & Cookies)</h3>
+        <p class="mb-4 text-slate-300 light:text-slate-700">Our website uses **Google AdSense** to serve advertisements. Google, as a third-party vendor, uses cookies (known as the **DART cookie**) to serve ads based on a user's prior visits to this and other websites.</p>
+        <p class="mb-4 text-slate-300 light:text-slate-700">This means that **third-party vendors**, including Google, may use cookies to serve ads based on your visit to this site and other sites on the Internet.</p>
+        <p class="mb-4 text-slate-300 light:text-slate-700"><strong>Opt-out:</strong> Users may opt out of the use of the DART cookie by visiting the <a href="https://policies.google.com/technologies/ads" class="text-sky-400 hover:text-sky-300 light:text-blue-600 light:hover:text-blue-500">Google Ad and Content Network Privacy Policy</a>.</p>
+
+        <h3 class="text-2xl font-semibold mt-6 mb-3">3. External Links</h3>
+        <p class="mb-4 text-slate-300 light:text-slate-700">Our website may contain links to other sites (such as affiliate partners). We have no control over and assume no responsibility for the content, privacy policies, or practices of any third-party sites or services.</p>
+        
+        <h3 class="text-2xl font-semibold mt-6 mb-3">4. Consent</h3>
+        <p class="text-slate-300 light:text-slate-700">By using our website, you hereby consent to our Privacy Policy and agree to its terms.</p>
+    </section>
+</main>
+
+    <footer class="mt-10 py-6 text-center text-slate-400 light:text-slate-600 border-t border-white/10 light:border-slate-300">
+        <div class="mx-auto max-w-6xl">
+            <p class="text-xs">Built with ❤️ — No data leaves your browser.</p>
+            <div class="mt-3 flex justify-center gap-6">
+                <a href="privacy.html" class="text-sm hover:text-white light:hover:text-slate-900 transition">Privacy Policy</a>
+                <a href="about.html" class="text-sm hover:text-white light:hover:text-slate-900 transition">About Us</a>
+                <a href="contact.html" class="text-sm hover:text-white light:hover:text-slate-900 transition">Contact Us</a>
+            </div>
+            <p class="mt-3 text-xs opacity-75">&copy; 2025 Age Inquiry Pro. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Set initial theme based on index.html's logic
+        const THEME_KEY = 'ageTheme';
+        const applyTheme = (mode) => {
+            const dark = mode !== 'light';
+            document.documentElement.classList.toggle('dark', dark);
+            document.documentElement.classList.toggle('light', !dark);
+            document.body.className = dark ? 'min-h-screen bg-slate-950 text-slate-100' : 'min-h-screen bg-white text-slate-900';
+        };
+        applyTheme(localStorage.getItem(THEME_KEY) || 'dark');
+    </script>
+</body>
+</html>

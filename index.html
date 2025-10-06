@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Age Inquiry Pro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="description" content="Age calculator with next birthday countdown, zodiac signs, planet ages, and legal-age checks." />
+  <style>
+    /* Smooth card animations */
+    .pop { animation: pop 280ms ease-out; }
+    @keyframes pop { 0% { transform: scale(.96); opacity: .2 } 100% { transform: scale(1); opacity: 1 } }
+    .grid-autofill { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+    /* Accent color for the header */
+    .accent { background: linear-gradient(135deg, #3b82f6 0%, #22d3ee 100%); }
+    /* Light mode specific classes */
+    .light .bg-slate-950 { background-color: #f7f8fa; }
+    .light .text-slate-100 { color: #1e293b; }
+    .light .bg-slate-900\/60 { background-color: rgba(255, 255, 255, 0.9); }
+    .light .text-slate-300 { color: #475569; }
+    .light .text-slate-400 { color: #64748b; }
+    .light .text-slate-500 { color: #94a3b8; }
+    .light .bg-slate-800\/80 { background-color: #e2e8f0; }
+    .light .ring-white\/10 { border-color: rgba(203, 213, 225, 0.5); }
+    .light .accent-text-dark { color: #1e293b; }
+  </style>
+</head>
+
+<body class="min-h-screen bg-slate-950 text-slate-100">
+  <header class="accent text-white">
+    <div class="mx-auto max-w-6xl px-4 py-6 flex items-center justify-between">
+      <h1 class="text-2xl md:text-3xl font-bold tracking-tight">🧮 Age Inquiry <span class="opacity-90">Pro</span></h1>
+      <div class="flex items-center gap-2">
+        <button id="themeToggle" class="rounded-xl bg-white/10 hover:bg-white/20 px-3 py-2 text-sm font-medium dark:bg-white/10 dark:hover:bg-white/20 light:bg-slate-900/10 light:hover:bg-slate-900/20 light:text-slate-900">Toggle Theme</button>
+        <a id="exportBtn" class="rounded-xl bg-white text-slate-900 hover:bg-slate-100 px-3 py-2 text-sm font-semibold cursor-pointer">Export JSON</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-6xl px-4 py-6">
+    <section class="bg-slate-900/60 backdrop-blur rounded-2xl ring-1 ring-white/10 p-5 md:p-7 pop light:bg-white/90">
+      <h2 class="text-xl font-semibold mb-4">Enter Your Birth Details</h2>
+      <form id="ageForm" class="grid md:grid-cols-4 gap-4 items-end">
+        <label class="block">
+          <span class="text-sm text-slate-300 light:text-slate-600">Date of Birth</span>
+          <input id="dob" type="date" class="mt-1 w-full rounded-xl bg-slate-800/80 ring-1 ring-white/10 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400 light:bg-slate-200 light:text-slate-900 light:ring-slate-300" required />
+        </label>
+        <label class="block">
+          <span class="text-sm text-slate-300 light:text-slate-600">Time (optional)</span>
+          <input id="tob" type="time" class="mt-1 w-full rounded-xl bg-slate-800/80 ring-1 ring-white/10 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400 light:bg-slate-200 light:text-slate-900 light:ring-slate-300" />
+        </label>
+        <label class="block">
+          <span class="text-sm text-slate-300 light:text-slate-600">Name (optional)</span>
+          <input id="name" type="text" placeholder="e.g., Ayesha" class="mt-1 w-full rounded-xl bg-slate-800/80 ring-1 ring-white/10 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400 light:bg-slate-200 light:text-slate-900 light:ring-slate-300" />
+        </label>
+        <div class="flex gap-3">
+          <button type="submit" class="flex-1 rounded-xl bg-sky-500 hover:bg-sky-400 px-4 py-2 font-semibold">Calculate</button>
+          <button type="button" id="resetBtn" class="rounded-xl bg-slate-700 hover:bg-slate-600 px-4 py-2">Reset</button>
+        </div>
+      </form>
+      <p class="mt-3 text-xs text-slate-400 light:text-slate-500">Time zone detected: <span id="tz"></span></p>
+    </section>
+
+    <section id="results" class="mt-6 grid grid-autofill gap-4">
+      </section>
+
+    <section class="mt-8">
+      <div class="flex items-center justify-between mb-2">
+        <h3 class="text-lg font-semibold">Recent Calculations</h3>
+        <button id="clearHistory" class="text-sm text-slate-300 hover:text-white light:text-slate-600 light:hover:text-slate-900">Clear</button>
+      </div>
+      <div id="history" class="grid grid-autofill gap-3"></div>
+    </section>
+  </main>
+
+  <footer class="mt-10 py-6 text-center text-slate-400 light:text-slate-600 border-t border-white/10 light:border-slate-300">
+    <div class="mx-auto max-w-6xl">
+        <p class="text-xs">Built with ❤️ — No data leaves your browser.</p>
+        <div class="mt-3 flex justify-center gap-6">
+            <a href="privacy.html" class="text-sm hover:text-white light:hover:text-slate-900 transition">Privacy Policy</a>
+            <a href="about.html" class="text-sm hover:text-white light:hover:text-slate-900 transition">About Us</a>
+            <a href="contact.html" class="text-sm hover:text-white light:hover:text-slate-900 transition">Contact Us</a>
+        </div>
+        <p class="mt-3 text-xs opacity-75">&copy; 2025 Age Inquiry Pro. All rights reserved.</p>
+    </div>
+  </footer>
+
+
+  <template id="cardTpl">
+    <div class="pop rounded-2xl bg-slate-900/60 ring-1 ring-white/10 p-4 light:bg-white/90">
+      <div class="flex items-center gap-2 mb-2">
+        <div class="text-lg">🔹</div>
+        <h4 class="font-semibold"></h4>
+      </div>
+      <div class="text-sm text-slate-300 content light:text-slate-600"></div>
+    </div>
+  </template>
+
+  <script>
+    // --- Utilities ---
+    const $ = (sel, parent = document) => parent.querySelector(sel);
+    const fmt = new Intl.DateTimeFormat(undefined, { dateStyle: 'full', timeStyle: undefined });
+    const relFmt = new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' });
+
+    const WESTERN_ZODIAC = [
+      { sign: 'Capricorn', from: '12-22' },
+      { sign: 'Aquarius', from: '01-20' },
+      { sign: 'Pisces', from: '02-19' },
+      { sign: 'Aries', from: '03-21' },
+      { sign: 'Taurus', from: '04-20' },
+      { sign: 'Gemini', from: '05-21' },
+      { sign: 'Cancer', from: '06-21' },
+      { sign: 'Leo', from: '07-23' },
+      { sign: 'Virgo', from: '08-23' },
+      { sign: 'Libra', from: '09-23' },
+      { sign: 'Scorpio', from: '10-23' },
+      { sign: 'Sagittarius', from: '11-22' }
+    ];
+
+    const CHINESE_ANIMALS = ['Rat','Ox','Tiger','Rabbit','Dragon','Snake','Horse','Goat','Monkey','Rooster','Dog','Pig'];
+
+    const PLANET_YEARS = {
+      Mercury: 0.2408467,
+      Venus: 0.61519726,
+      Earth: 1,
+      Mars: 1.8808158,
+      Jupiter: 11.862615,
+      Saturn: 29.447498,
+      Uranus: 84.016846,
+      Neptune: 164.79132
+    };
+
+    function getWesternZodiac(month, day) {
+      const mmdd = `${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+      const ordered = [...WESTERN_ZODIAC].sort((a,b)=>a.from.localeCompare(b.from));
+      let sign = 'Capricorn';
+      for (const z of ordered) {
+        if (mmdd >= z.from) sign = z.sign;
+      }
+      return sign;
+    }
+
+    function getChineseZodiac(year) {
+      return CHINESE_ANIMALS[(year - 1900) % 12];
+    }
+
+    function diffDetailed(from, to) {
+      let start = new Date(from);
+      let end = new Date(to);
+      if (end < start) [start, end] = [end, start];
+
+      let years = end.getFullYear() - start.getFullYear();
+      let months = end.getMonth() - start.getMonth();
+      let days = end.getDate() - start.getDate();
+      let hours = end.getHours() - start.getHours();
+      let minutes = end.getMinutes() - start.getMinutes();
+      let seconds = end.getSeconds() - start.getSeconds();
+
+      if (seconds < 0) { seconds += 60; minutes--; }
+      if (minutes < 0) { minutes += 60; hours--; }
+      if (hours < 0) { hours += 24; days--; }
+
+      if (days < 0) {
+        const prevMonth = new Date(end.getFullYear(), end.getMonth(), 0).getDate();
+        days += prevMonth; months--;
+      }
+      if (months < 0) { months += 12; years--; }
+
+      const totalMs = end - start;
+      const totalDays = Math.floor(totalMs / (1000*60*60*24));
+      const totalHours = Math.floor(totalMs / (1000*60*60));
+      const totalMinutes = Math.floor(totalMs / (1000*60));
+      const totalSeconds = Math.floor(totalMs / 1000);
+
+      return { years, months, days, hours, minutes, seconds, totalDays, totalHours, totalMinutes, totalSeconds };
+    }
+
+    function nextBirthday(dob, now = new Date()) {
+      const birth = new Date(dob);
+      const thisYear = new Date(now.getFullYear(), birth.getMonth(), birth.getDate());
+      let next = thisYear >= now ? thisYear : new Date(now.getFullYear()+1, birth.getMonth(), birth.getDate());
+
+      if (birth.getMonth() === 1 && birth.getDate() === 29) {
+        const y = next.getFullYear();
+        const isLeap = (y % 4 === 0 && (y % 100 !== 0 || y % 400 === 0));
+        next = new Date(y, 1, isLeap ? 29 : 28);
+      }
+      const ms = next - now;
+      const days = Math.ceil(ms / (1000*60*60*24));
+      return { date: next, days };
+    }
+
+    function planetAges(years) {
+      const res = {};
+      for (const [planet, earthRatio] of Object.entries(PLANET_YEARS)) {
+        res[planet] = +(years / earthRatio).toFixed(2);
+      }
+      return res;
+    }
+
+    function legalChecks(years) {
+      const thresholds = [13, 16, 18, 21];
+      const now = new Date();
+      return thresholds.map(age => {
+        const reachDate = new Date($('#dob').value);
+        reachDate.setFullYear(reachDate.getFullYear() + age);
+        return {
+          label: `${age}+`,
+          reached: years >= age,
+          date: fmt.format(reachDate),
+          past: reachDate < now
+        };
+      });
+    }
+
+    function makeCard(title, html) {
+      const tpl = $('#cardTpl');
+      const node = tpl.content.cloneNode(true);
+      node.querySelector('h4').textContent = title;
+      node.querySelector('.content').innerHTML = html;
+      return node;
+    }
+
+    function saveHistory(entry) {
+      const arr = JSON.parse(localStorage.getItem('ageHistory')||'[]');
+      arr.unshift(entry);
+      localStorage.setItem('ageHistory', JSON.stringify(arr.slice(0,8)));
+      renderHistory();
+    }
+
+    function renderHistory() {
+      const wrap = $('#history');
+      wrap.innerHTML = '';
+      const arr = JSON.parse(localStorage.getItem('ageHistory')||'[]');
+      if (!arr.length) {
+        wrap.innerHTML = '<p class="text-slate-400 text-sm light:text-slate-500">No recent calculations yet.</p>';
+        return;
+      }
+      for (const item of arr) {
+        const div = document.createElement('button');
+        div.className = 'text-left pop rounded-xl bg-slate-900/60 ring-1 ring-white/10 p-3 hover:bg-slate-800 transition light:bg-white/90 light:ring-slate-300 light:hover:bg-slate-100';
+        div.innerHTML = `<div class="flex items-center justify-between"><span class="font-medium light:text-slate-800">${item.name||'Anonymous'}</span><span class="text-xs text-slate-400">${item.dob}</span></div><div class="text-xs text-slate-300 mt-1 light:text-slate-600">Age: ${item.years}y ${item.months}m ${item.days}d</div>`;
+        div.addEventListener('click', ()=>{
+          $('#dob').value = item.dob;
+          if (item.tob) $('#tob').value = item.tob;
+          if (item.name) $('#name').value = item.name;
+          calculate();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        wrap.appendChild(div);
+      }
+    }
+
+    function calculate() {
+      const dobVal = $('#dob').value;
+      if (!dobVal) return;
+      const tobVal = $('#tob').value;
+      const nameVal = $('#name').value.trim();
+
+      let birth = new Date(dobVal);
+      if (tobVal) {
+        const [hh, mm] = tobVal.split(':').map(Number);
+        birth.setHours(hh, mm, 0, 0);
+      }
+      const now = new Date();
+
+      if (birth > now) {
+        $('#results').innerHTML = '';
+        $('#results').appendChild(makeCard('⚠️ Invalid Date', '<p>Please choose a birth date/time that is not in the future.</p>'));
+        return;
+      }
+
+      const d = diffDetailed(birth, now);
+      const western = getWesternZodiac(birth.getMonth()+1, birth.getDate());
+      const chinese = getChineseZodiac(birth.getFullYear());
+      const weekday = new Intl.DateTimeFormat(undefined, { weekday: 'long' }).format(birth);
+      const next = nextBirthday(birth, now);
+      const planet = planetAges(d.years + d.months/12 + d.days/365.25);
+      const legal = legalChecks(d.years);
+
+      // Build cards
+      const res = $('#results');
+      res.innerHTML = '';
+      res.appendChild(makeCard('👤 Summary', `
+        <ul class='space-y-1'>
+          <li><span class='text-slate-400 light:text-slate-500'>Name:</span> ${nameVal || '<em class="text-slate-500 light:text-slate-400">—</em>'}</li>
+          <li><span class='text-slate-400 light:text-slate-500'>Born:</span> ${fmt.format(birth)} <span class='text-slate-500 light:text-slate-400 text-xs'>(on ${weekday})</span></li>
+          <li><span class='text-slate-400 light:text-slate-500'>Current Age:</span> <strong>${d.years}</strong> years, ${d.months} months, ${d.days} days</li>
+          <li><span class='text-slate-400 light:text-slate-500'>In totals:</span> ${d.totalDays.toLocaleString()} days · ${d.totalHours.toLocaleString()} hours</li>
+        </ul>
+      `));
+
+      res.appendChild(makeCard('🎂 Next Birthday', `
+        <p>Next birthday on <strong>${fmt.format(next.date)}</strong>.</p>
+        <p class='mt-1'>That's in <strong>${next.days}</strong> day${next.days!==1?'s':''}.</p>
+      `));
+
+      res.appendChild(makeCard('🧭 Zodiac', `
+        <div class='grid grid-cols-2 gap-2'>
+          <div class='rounded-lg bg-slate-800/60 p-3 light:bg-slate-200/60'>
+            <div class='text-xs text-slate-400 light:text-slate-500'>Western</div>
+            <div class='text-lg font-semibold light:text-slate-900'>${western}</div>
+          </div>
+          <div class='rounded-lg bg-slate-800/60 p-3 light:bg-slate-200/60'>
+            <div class='text-xs text-slate-400 light:text-slate-500'>Chinese</div>
+            <div class='text-lg font-semibold light:text-slate-900'>${chinese}</div>
+          </div>
+        </div>
+      `));
+
+      const planetRows = Object.entries(planet)
+        .map(([p,v])=>`<div class='flex items-center justify-between'><span>${p}</span><span class='font-semibold'>${v}</span></div>`)
+        .join('');
+      res.appendChild(makeCard('🪐 Age on Planets (years)', `<div class='space-y-1'>${planetRows}</div>`));
+
+      const legalRows = legal.map(x=>`
+        <div class='flex items-center justify-between'>
+          <span>${x.label}</span>
+          <span class='text-xs text-slate-400 light:text-slate-500 mr-2'>${x.date}</span>
+          <span class='font-semibold ${x.past? 'text-emerald-400':'text-amber-300'}'>${x.reached? 'Reached':'Upcoming'}</span>
+        </div>
+      `).join('');
+      res.appendChild(makeCard('⚖️ Legal Age Milestones', `<div class='space-y-1'>${legalRows}</div>`));
+
+      // Save history
+      saveHistory({ name: nameVal, dob: dobVal, tob: tobVal, years: d.years, months: d.months, days: d.days });
+
+      // Prepare data for export
+      window.__lastResult = {
+        name: nameVal || null,
+        dob: dobVal,
+        time: tobVal || null,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        computedAt: new Date().toISOString(),
+        details: {
+          years: d.years, months: d.months, days: d.days,
+          totals: { days: d.totalDays, hours: d.totalHours, minutes: d.totalMinutes, seconds: d.totalSeconds },
+          weekday, westernZodiac: western, chineseZodiac: chinese,
+          nextBirthday: { date: next.date.toISOString(), daysAway: next.days },
+          planetAges: planet,
+          legalMilestones: legal
+        }
+      };
+    }
+
+    // --- Event wiring ---
+    $('#ageForm').addEventListener('submit', (e)=>{ e.preventDefault(); calculate(); });
+    $('#resetBtn').addEventListener('click', ()=>{ $('#ageForm').reset(); $('#results').innerHTML = ''; });
+    $('#clearHistory').addEventListener('click', ()=>{ localStorage.removeItem('ageHistory'); renderHistory(); });
+    $('#exportBtn').addEventListener('click', ()=>{
+      if (!window.__lastResult) { alert('Calculate age first.'); return; }
+      const blob = new Blob([JSON.stringify(window.__lastResult, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'age-inquiry-result.json'; a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // Theme toggle
+    const THEME_KEY = 'ageTheme';
+    function applyTheme(mode){
+      const dark = mode !== 'light';
+      document.documentElement.classList.toggle('dark', dark);
+      document.documentElement.classList.toggle('light', !dark);
+      document.body.className = dark ? 'min-h-screen bg-slate-950 text-slate-100' : 'min-h-screen bg-white text-slate-900';
+    }
+    $('#themeToggle').addEventListener('click', ()=>{
+      const current = localStorage.getItem(THEME_KEY) || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      localStorage.setItem(THEME_KEY, next); applyTheme(next);
+    });
+    // Set initial theme based on localStorage, default to dark
+    applyTheme(localStorage.getItem(THEME_KEY) || 'dark');
+
+    // TZ label
+    $('#tz').textContent = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    // Hydrate history on load
+    renderHistory();
+  </script>
+
+</body>
+</html>
