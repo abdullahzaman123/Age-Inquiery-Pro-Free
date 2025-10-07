@@ -1,0 +1,20 @@
+# robots.txt for https://ageinquireypro.online/
+# Created on: 2025-10-06
+# Purpose: Allow all search engines to index the website properly
+
+User-agent: *
+Allow: /
+
+# Disallow unnecessary files or folders (agar aapke project me ye hain)
+Disallow: /admin/
+Disallow: /login/
+Disallow: /tmp/
+Disallow: /cgi-bin/
+
+# Sitemap location (important for SEO)
+Sitemap: https://ageinquireypro.online/sitemap.xml
+
+# Additional SEO instructions
+# Crawl-delay: 10   <-- (optional, add if your server is slow)
+
+# End of file
